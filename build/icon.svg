@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#262626"/><stop offset="1" stop-color="#0D0D0D"/></linearGradient>
+    <linearGradient id="au" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F2D57E"/><stop offset=".5" stop-color="#D4AF37"/><stop offset="1" stop-color="#B8860B"/></linearGradient>
+    <linearGradient id="ag" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E6E8EA"/><stop offset=".5" stop-color="#B4B8BC"/><stop offset="1" stop-color="#8A8D91"/></linearGradient>
+  </defs>
+  <rect x="48" y="48" width="928" height="928" rx="200" fill="url(#bg)" stroke="url(#au)" stroke-width="20"/>
+  <g fill="url(#au)">
+    <rect x="512" y="70" width="60" height="30" rx="8"/><rect x="452" y="122" width="60" height="30" rx="8"/><rect x="512" y="174" width="60" height="30" rx="8"/><rect x="452" y="226" width="60" height="30" rx="8"/><rect x="512" y="278" width="60" height="30" rx="8"/><rect x="452" y="330" width="60" height="30" rx="8"/><rect x="512" y="382" width="60" height="30" rx="8"/><rect x="452" y="434" width="60" height="30" rx="8"/><rect x="512" y="486" width="60" height="30" rx="8"/>
+    <rect x="432" y="530" width="160" height="124" rx="26"/>
+    <rect x="474" y="648" width="76" height="96" rx="36"/>
+  </g>
+  <rect x="490" y="580" width="44" height="28" rx="10" fill="#0D0D0D"/>
+  <text x="512" y="905" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-weight="800" font-size="150" fill="url(#ag)" letter-spacing="6"><tspan fill="url(#au)">R</tspan>3</text>
+</svg>

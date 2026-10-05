@@ -1,0 +1,180 @@
+{
+  "name": "r3-zip",
+  "productName": "R3 Zip",
+  "version": "1.0.1",
+  "description": "R3 Zip — compresor y descompresor de archivos. Software libre de código abierto desarrollado por R3. Gratuito.",
+  "main": "main.js",
+  "author": {
+    "name": "R3",
+    "url": "https://r3sas.com"
+  },
+  "homepage": "https://github.com/R3SAS/r3-zip",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "test": "node test/engine-test.js",
+    "test:ui": "electron . --exec=test/ui-test.js",
+    "icon": "electron tools/make-icon.js",
+    "dist:win": "electron-builder --win nsis --x64",
+    "dist:mac": "electron-builder --mac dmg zip --x64 --arm64"
+  },
+  "devDependencies": {
+    "electron": "33.4.11",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "co.r3sas.zip",
+    "productName": "R3 Zip",
+    "copyright": "© 2026 R3 · Software libre de código abierto (licencia MIT) · Gratuito, no se vende",
+    "directories": {
+      "output": "../../../R3 Zip - instalador",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**/*",
+      "renderer/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "asar": true,
+    "extraResources": [
+      {
+        "from": "LICENSE",
+        "to": "LICENSE.txt"
+      },
+      {
+        "from": "THIRD-PARTY-NOTICES.md",
+        "to": "THIRD-PARTY-NOTICES.md"
+      },
+      {
+        "from": "LEGAL-COLOMBIA.md",
+        "to": "LEGAL-COLOMBIA.md"
+      },
+      {
+        "from": "vendor/src",
+        "to": "engine-source"
+      }
+    ],
+    "fileAssociations": [
+      {
+        "ext": [
+          "zip"
+        ],
+        "name": "Archivo ZIP",
+        "description": "Archivo comprimido ZIP",
+        "role": "Viewer"
+      },
+      {
+        "ext": [
+          "7z"
+        ],
+        "name": "Archivo 7Z",
+        "description": "Archivo comprimido 7Z",
+        "role": "Viewer"
+      },
+      {
+        "ext": [
+          "rar"
+        ],
+        "name": "Archivo RAR",
+        "description": "Archivo comprimido RAR",
+        "role": "Viewer"
+      },
+      {
+        "ext": [
+          "tar",
+          "tgz",
+          "txz",
+          "tbz2",
+          "gz",
+          "bz2",
+          "xz",
+          "zst"
+        ],
+        "name": "Archivo TAR/GZ",
+        "description": "Archivo comprimido",
+        "role": "Viewer"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "artifactName": "R3-Zip-Setup-${version}.${ext}",
+      "extraResources": [
+        {
+          "from": "vendor/win-x64",
+          "to": "engine"
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "R3 Zip",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "license": "build/license.txt",
+      "include": "build/installer.nsh",
+      "installerLanguages": [
+        "es_ES"
+      ],
+      "language": "3082",
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": true
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png",
+      "category": "public.app-category.utilities",
+      "identity": "-",
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false,
+      "artifactName": "R3-Zip-${version}-${arch}.${ext}",
+      "extraResources": [
+        {
+          "from": "vendor/mac",
+          "to": "engine"
+        }
+      ],
+      "extendInfo": {
+        "NSHumanReadableCopyright": "© 2026 R3 · Software libre de código abierto (MIT) · Gratuito"
+      }
+    },
+    "dmg": {
+      "title": "R3 Zip ${version}"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/R3SAS/r3-zip.git"
+  }
+}

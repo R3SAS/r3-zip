@@ -1,0 +1,33 @@
+﻿R3 Zip — Software libre y de código abierto desarrollado por R3
+===============================================================
+
+R3 Zip es GRATUITO: R3 lo entrega sin costo a sus clientes y usuarios. No se vende.
+
+1. Licencia de R3 Zip (MIT)
+   Copyright (c) 2026 R3. Puede usar, copiar, modificar y redistribuir este
+   software libremente, siempre que conserve este aviso de copyright y licencia.
+   El software se entrega "TAL CUAL", sin garantías de ningún tipo. R3 no será
+   responsable por daños derivados de su uso, salvo en lo que la ley colombiana
+   no permita excluir (dolo o culpa grave). Texto completo (inglés y español)
+   en el archivo LICENSE.txt de la carpeta de instalación.
+
+2. Componentes de terceros incluidos
+   - 7-Zip (c) 1999-2026 Igor Pavlov — GNU LGPL 2.1 o posterior, con partes
+     bajo licencias BSD de 2 y 3 cláusulas. Se incluye sin modificar como motor
+     de compresión. Su código fuente está en la carpeta "engine-source".
+   - Descompresión de RAR: basada en el código de unRAR (c) Alexander Roshal.
+     Restricción de su licencia: ese código no puede usarse para desarrollar
+     un compresor compatible con RAR (WinRAR). R3 Zip solo DESCOMPRIME RAR.
+   - Electron y Chromium (MIT, BSD y otras): ver LICENSES.chromium.html y
+     LICENSE.electron.txt en la carpeta de instalación.
+
+3. Independencia
+   R3 Zip es un producto independiente. No está afiliado ni respaldado por
+   7-Zip, RARLAB (WinRAR), Corel (WinZip), Microsoft ni Apple. Los nombres de
+   formatos (ZIP, 7Z, RAR, TAR…) se mencionan solo para indicar compatibilidad.
+
+4. Privacidad
+   R3 Zip funciona sin conexión a Internet. No recopila, envía ni almacena datos
+   personales ni información de uso.
+
+Al hacer clic en "Acepto" usted declara haber leído estas condiciones.

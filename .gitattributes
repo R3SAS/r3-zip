@@ -1,0 +1,7 @@
+* text=auto eol=lf
+*.exe binary
+*.dll binary
+*.7z binary
+*.png binary
+*.ico binary
+vendor/mac/7zz binary

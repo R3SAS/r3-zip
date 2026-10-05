@@ -1,0 +1,58 @@
+# Compila los instaladores de Windows (.exe) y macOS (.dmg/.zip, Intel y Apple Silicon).
+# Uso: suba este proyecto a un repositorio de GitHub y ejecute la acción "Instaladores"
+# desde la pestaña Actions (o cree una etiqueta v1.0.0). Los instaladores quedan como artefactos.
+name: Instaladores
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - name: Permiso de ejecución del motor (macOS)
+        if: runner.os == 'macOS'
+        run: chmod +x vendor/mac/7zz
+      - run: npm test
+      - name: Windows
+        if: runner.os == 'Windows'
+        run: npx electron-builder --win nsis --x64 --publish never -c.directories.output=dist
+      - name: macOS
+        if: runner.os == 'macOS'
+        run: npx electron-builder --mac dmg zip --x64 --arm64 --publish never -c.directories.output=dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: instaladores-${{ runner.os }}
+          path: |
+            dist/*.exe
+            dist/*.dmg
+            dist/*.zip
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+          merge-multiple: true
+      - name: Publicar versión
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" out/* --repo "${GITHUB_REPOSITORY}" --title "R3 Zip ${GITHUB_REF_NAME#v}" \
+            --notes "R3 Zip — compresor y descompresor de archivos. Software libre de código abierto desarrollado por R3 (licencia MIT). Gratuito.
+
+          - Windows: R3-Zip-Setup-*.exe
+          - macOS Apple Silicon (M1–M4): R3-Zip-*-arm64.dmg · macOS Intel: R3-Zip-*-x64.dmg
+          - En Mac, la primera vez: clic derecho sobre R3 Zip › Abrir (la app no está firmada por Apple)."

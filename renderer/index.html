@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'">
+  <title>R3 Zip</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <img src="../assets/logo-r3.png" alt="R3" class="logo">
+      <div>
+        <h1>R3 Zip</h1>
+        <small>Compresor y descompresor · código abierto</small>
+      </div>
+    </div>
+    <nav class="actions">
+      <button id="btnOpen" class="btn" title="Abrir un archivo comprimido (Ctrl+O)">
+        <svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Abrir</button>
+      <button id="btnCompress" class="btn" title="Crear un archivo comprimido (Ctrl+N)">
+        <svg viewBox="0 0 24 24"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Comprimir</button>
+      <button id="btnAbout" class="btn ghost" title="Acerca de R3 Zip y licencias">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>Acerca de</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Inicio -->
+    <section id="home" class="view">
+      <div class="cards">
+        <button class="card" id="cardExtract">
+          <svg viewBox="0 0 64 64" class="ico"><rect x="10" y="14" width="44" height="40" rx="6"/><path d="M32 4v26m0 0-8-8m8 8 8-8"/><path d="M28 14v40" class="zip"/></svg>
+          <h2>Descomprimir</h2>
+          <p>Abra o arrastre aquí un archivo <b>.zip, .7z, .rar, .tar, .gz</b> y más.</p>
+        </button>
+        <button class="card" id="cardCompress">
+          <svg viewBox="0 0 64 64" class="ico"><rect x="10" y="14" width="44" height="40" rx="6"/><path d="M32 30V4m0 0-8 8m8-8 8 8"/><path d="M28 14v40" class="zip"/></svg>
+          <h2>Comprimir</h2>
+          <p>Arrastre archivos o carpetas para crear un <b>.zip</b> o <b>.7z</b>, con contraseña si lo desea.</p>
+        </button>
+      </div>
+      <p class="hint">También puede arrastrar archivos sobre esta ventana en cualquier momento.</p>
+    </section>
+
+    <!-- Contenido de un comprimido -->
+    <section id="archive" class="view" hidden>
+      <div class="bar">
+        <div class="arch-name">
+          <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M11 3v18" class="zip"/></svg>
+          <div><b id="archTitle"></b><small id="archMeta"></small></div>
+        </div>
+        <div class="bar-actions">
+          <button class="btn gold" id="btnExtractAll">Extraer todo</button>
+          <button class="btn" id="btnExtractSel" disabled>Extraer selección</button>
+          <button class="btn" id="btnTest">Probar integridad</button>
+          <button class="btn ghost" id="btnClose" title="Cerrar (Ctrl+W)">Cerrar</button>
+        </div>
+      </div>
+      <div class="crumbs" id="crumbs"></div>
+      <div class="table-wrap">
+        <table class="files">
+          <thead><tr>
+            <th data-k="name">Nombre</th><th data-k="size" class="num">Tamaño</th><th data-k="packed" class="num">Comprimido</th><th data-k="modified">Modificado</th>
+          </tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <footer class="status" id="status"></footer>
+    </section>
+  </main>
+
+  <div id="drop" class="drop" hidden><div>Suelte para abrir o comprimir</div></div>
+
+  <!-- Ventanas -->
+  <dialog id="dlgPassword" class="dlg">
+    <form method="dialog">
+      <h3>Contraseña requerida</h3>
+      <p id="pwMsg">Este archivo está protegido. Escriba la contraseña.</p>
+      <label class="field"><span>Contraseña</span><input type="password" id="pwInput" autocomplete="off"></label>
+      <label class="check"><input type="checkbox" id="pwShow"> Mostrar</label>
+      <div class="buttons"><button value="cancel" class="btn ghost">Cancelar</button><button value="ok" class="btn gold" id="pwOk">Aceptar</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="dlgExtract" class="dlg">
+    <form method="dialog">
+      <h3>Extraer</h3>
+      <label class="field"><span>Carpeta de destino</span>
+        <div class="row"><input type="text" id="exDest"><button type="button" class="btn" id="exPick">Examinar…</button></div></label>
+      <label class="field"><span>Si un archivo ya existe</span>
+        <select id="exMode"><option value="rename">Conservar ambos (renombrar el nuevo)</option><option value="overwrite">Reemplazar</option><option value="skip">Omitir</option></select></label>
+      <label class="check"><input type="checkbox" id="exOpen" checked> Abrir la carpeta al terminar</label>
+      <div class="buttons"><button value="cancel" class="btn ghost">Cancelar</button><button value="ok" class="btn gold">Extraer</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="dlgCompress" class="dlg wide">
+    <form method="dialog">
+      <h3>Comprimir</h3>
+      <div class="inputs">
+        <ul id="cmpList"></ul>
+        <div class="row"><button type="button" class="btn" id="cmpAddFiles">+ Archivos</button><button type="button" class="btn" id="cmpAddDirs">+ Carpetas</button><span class="muted" id="cmpTotal"></span></div>
+      </div>
+      <div class="grid3">
+        <label class="field"><span>Formato</span>
+          <select id="cmpFormat">
+            <option value="zip">ZIP (universal)</option>
+            <option value="7z">7Z (más pequeño)</option>
+            <option value="tar">TAR</option>
+            <option value="tar.gz">TAR.GZ</option>
+            <option value="tar.xz">TAR.XZ</option>
+            <option value="tar.bz2">TAR.BZ2</option>
+          </select></label>
+        <label class="field"><span>Nivel de compresión</span>
+          <select id="cmpLevel"><option value="store">Sin comprimir</option><option value="fast">Rápida</option><option value="normal" selected>Normal</option><option value="max">Máxima</option><option value="ultra">Ultra (lenta)</option></select></label>
+  <label class="field"><span>Dividir en partes</span>
+        <select id="cmpVol"><option value="">No dividir</option><option value="10m">10 MB</option><option value="25m">25 MB (correo)</option><option value="100m">100 MB</option><option value="700m">700 MB</option><option value="4000m">4 GB (memoria USB)</option></select></label>
+      </div>
+      <label class="field"><span>Guardar como</span>
+        <div class="row"><input type="text" id="cmpOut"><button type="button" class="btn" id="cmpPick">Examinar…</button></div></label>
+      <fieldset id="cmpSecure">
+        <legend>Protección</legend>
+        <div class="grid2">
+          <label class="field"><span>Contraseña (opcional)</span><input type="password" id="cmpPw" autocomplete="new-password"></label>
+          <label class="field"><span>Repetir contraseña</span><input type="password" id="cmpPw2" autocomplete="new-password"></label>
+        </div>
+        <label class="check" id="cmpNamesWrap"><input type="checkbox" id="cmpNames"> Ocultar también los nombres de los archivos (solo 7Z)</label>
+        <small class="muted" id="cmpPwNote">Cifrado AES-256. Si olvida la contraseña no hay forma de recuperar el contenido.</small>
+      </fieldset>
+
+      <p class="error" id="cmpErr"></p>
+      <div class="buttons"><button value="cancel" class="btn ghost">Cancelar</button><button value="ok" class="btn gold" id="cmpGo">Comprimir</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="dlgProgress" class="dlg">
+    <h3 id="prTitle">Procesando…</h3>
+    <div class="progress"><div id="prBar"></div></div>
+    <div class="pr-info"><span id="prPct">0 %</span><span id="prFile" class="muted"></span></div>
+    <div class="buttons"><button class="btn ghost" id="prCancel">Cancelar</button></div>
+  </dialog>
+
+  <dialog id="dlgMsg" class="dlg">
+    <form method="dialog">
+      <h3 id="msgTitle"></h3>
+      <p id="msgText"></p>
+      <div class="buttons" id="msgButtons"></div>
+    </form>
+  </dialog>
+
+  <dialog id="dlgAbout" class="dlg wide">
+    <form method="dialog">
+      <div class="about-head">
+        <img src="../assets/logo-r3.png" alt="R3" class="logo big">
+        <div><h3>R3 Zip <span id="abVer"></span></h3><p class="muted">Compresor y descompresor de archivos</p></div>
+      </div>
+      <div class="about-badges"><span>Código abierto · MIT</span><span>Gratuito · no se vende</span><span>Hecho en Colombia</span></div>
+      <p><b>Aplicación de código abierto desarrollada por R3.</b> Se entrega sin costo a clientes y usuarios; su código puede usarse, estudiarse, modificarse y redistribuirse según la licencia MIT.</p>
+      <p>Motor de compresión: <b>7-Zip</b> <span id="abEngine"></span> © Igor Pavlov, incluido sin modificar bajo la licencia GNU LGPL (con partes BSD). La descompresión de RAR usa código basado en unRAR © Alexander Roshal, que no puede usarse para crear un compresor RAR. El código fuente de 7-Zip viene en la carpeta de instalación.</p>
+      <p>Código fuente de R3 Zip: <a href="https://github.com/R3SAS/r3-zip" target="_blank" class="link">github.com/R3SAS/r3-zip</a></p>
+      <p class="muted small">R3 Zip es un producto independiente: no está afiliado ni respaldado por 7-Zip, RARLAB (WinRAR), Corel (WinZip), Microsoft ni Apple. Los nombres de formatos (ZIP, 7Z, RAR…) se mencionan solo para indicar compatibilidad. El software se entrega «tal cual», sin garantías, según la licencia.</p>
+      <p class="muted small" id="abSys"></p>
+      <div class="buttons">
+        <button type="button" class="btn" data-lic="app">Licencia de R3 Zip</button>
+        <button type="button" class="btn" data-lic="third">Avisos de terceros</button>
+        <button type="button" class="btn" data-lic="engine">Licencia de 7-Zip</button>
+        <button value="ok" class="btn gold">Cerrar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="dlgLicense" class="dlg wide">
+    <form method="dialog">
+      <h3 id="licTitle"></h3>
+      <pre id="licText"></pre>
+      <div class="buttons"><button type="button" class="btn ghost" id="licFolder">Abrir carpeta</button><button value="ok" class="btn gold">Cerrar</button></div>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
