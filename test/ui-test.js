@@ -41,8 +41,8 @@ module.exports = async ({ win, engine, quit }) => {
     const tono = (v) => js(`(() => { const r = document.querySelector('.r3-tono input'); r.value = '${v}'; r.dispatchEvent(new Event('input')); })()`);
     if (!(await js(`!!document.querySelector('.top .r3-tono')`))) throw new Error('falta el control de tono');
     if ((await fondo()) !== 'rgb(179, 174, 164)') throw new Error('tono R3 inesperado: ' + (await fondo()));
-    await tono(10); await shot('2b-tono-claro');
-    await tono(92); await shot('2c-tono-oscuro');
+    await tono(0); await shot('2b-tono-blanco');
+    await tono(100); await shot('2c-tono-negro');
     if ((await js(`getComputedStyle(document.body).color`)) !== 'rgb(236, 237, 238)') throw new Error('tono oscuro sin texto claro');
     await tono(50);
     await js(`localStorage.removeItem('r3-tono')`);
