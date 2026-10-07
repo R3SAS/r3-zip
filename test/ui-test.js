@@ -36,6 +36,18 @@ module.exports = async ({ win, engine, quit }) => {
     await shot('2-contenido');
     ok('abrir comprimido y entrar a carpeta (7 elementos)');
 
+    // Tema híbrido R3 + control de tono (claro y oscuro), luego vuelve al tono R3
+    const fondo = () => js(`getComputedStyle(document.body).backgroundColor`);
+    const tono = (v) => js(`(() => { const r = document.querySelector('.r3-tono input'); r.value = '${v}'; r.dispatchEvent(new Event('input')); })()`);
+    if (!(await js(`!!document.querySelector('.top .r3-tono')`))) throw new Error('falta el control de tono');
+    if ((await fondo()) !== 'rgb(179, 174, 164)') throw new Error('tono R3 inesperado: ' + (await fondo()));
+    await tono(10); await shot('2b-tono-claro');
+    await tono(92); await shot('2c-tono-oscuro');
+    if ((await js(`getComputedStyle(document.body).color`)) !== 'rgb(236, 237, 238)') throw new Error('tono oscuro sin texto claro');
+    await tono(50);
+    await js(`localStorage.removeItem('r3-tono')`);
+    ok('tema híbrido y control de tono');
+
     // Extraer todo con el diálogo
     await js(`document.getElementById('btnExtractAll').click()`);
     await until(`document.getElementById('dlgExtract').open`);

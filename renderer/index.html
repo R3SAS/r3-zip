@@ -2,9 +2,11 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'sha256-8NK4iEfq5Z5ihdyaERJZeSpL8pSufekmVilUEISwFdY='; script-src 'self'">
   <title>R3 Zip</title>
   <link rel="stylesheet" href="style.css">
+  <!-- control de tono R3 (mismo archivo que Horas, Tareas, Sincronizador y R3 PDF); el hash de la CSP corresponde a su <style> -->
+  <script src="tono.js" data-app="sinc" data-donde=".actions" data-primero data-compacto="860"></script>
 </head>
 <body>
   <header class="top">

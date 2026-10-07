@@ -1,7 +1,7 @@
 {
   "name": "r3-zip",
   "productName": "R3 Zip",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "R3 Zip — compresor y descompresor de archivos. Software libre de código abierto desarrollado por R3. Gratuito.",
   "main": "main.js",
   "author": {
